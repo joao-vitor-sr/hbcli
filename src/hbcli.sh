@@ -6,8 +6,14 @@ usage() {
   printf %s "\
     hbcli - Holy Bible Command Line
 
-  =>  [l]ist                       - List Languages.
-  =>  [r]read [language] <options> - Read Bible.
+  LANGUAGES: <default = english>
+    -L              List Languages
+    -i  <language>  Select a language
+
+  BIBLE:
+    -r  <book>     Read a book
+    -v  <versicle> Select a Versicle
+    -l         List books
   "
   exit 0
 }
@@ -47,12 +53,11 @@ set -f
 cd "/usr/local/share/hbcli/" || exit
 
 SELECTED_IDIOM=""
-SELECTED_BOOK=""
 ACTION=""
 SELECTED_IDIOM="english"
 VERSICLE=""
 
-while getopts ':Lliv:r:' options; do
+while getopts ':Llv:i:r:' options; do
 
   case "$options" in
     r)
@@ -67,6 +72,7 @@ while getopts ':Lliv:r:' options; do
       ;;
     i)
       SELECTED_IDIOM=${OPTARG}
+      ACTION=LIST
       ;;
     v)
       VERSICLE=${OPTARG}
@@ -101,4 +107,5 @@ case $ACTION in
     ;;
   LIST) list_books "$SELECTED_IDIOM" ;;
   LIST_LANGUAGES) hbcli_list_languages ;;
+  *) exit_abnormal ;;
 esac
