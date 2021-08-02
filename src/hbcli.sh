@@ -44,8 +44,7 @@ set +x
 set -f
 
 
-mkdir -p  "${HBCLI_DIR:=${XDG_DATA_HOME:=$HOME/.local/share}/hbcli}"
-cd "${HBCLI_DIR:=${XDG_DATA_HOME:=$HOME/.local/share}/hbcli}" || exit
+cd "/usr/local/share/hbcli/" || exit
 
 SELECTED_IDIOM=""
 SELECTED_BOOK=""
@@ -53,7 +52,7 @@ ACTION=""
 SELECTED_IDIOM="english"
 VERSICLE=""
 
-while getopts ':liv:r:' options; do
+while getopts ':Lliv:r:' options; do
 
   case "$options" in
     r)
@@ -62,6 +61,9 @@ while getopts ':liv:r:' options; do
       ;;
     l)
       ACTION=LIST
+      ;;
+    L)
+      ACTION=LIST_LANGUAGES
       ;;
     i)
       SELECTED_IDIOM=${OPTARG}
@@ -98,4 +100,5 @@ case $ACTION in
     cat "$fileOfLanguage" | awk -v cmd=ref -v ref="$bookToSearch" "$(cat hbcli.awk)" | ${PAGER}
     ;;
   LIST) list_books "$SELECTED_IDIOM" ;;
+  LIST_LANGUAGES) hbcli_list_languages ;;
 esac
